@@ -1,0 +1,57 @@
+<nav class="navbar">
+  <div class="navbar__inner">
+    <a routerLink="/" class="navbar__logo" (click)="close()">
+      <span class="navbar__logo-icon">◈</span>EventHub
+    </a>
+    <ul class="navbar__links">
+      <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">Découvrir</a></li>
+      @if (auth.isLoggedIn()) {
+        <li><a routerLink="/tickets" routerLinkActive="active">Mes Tickets</a></li>
+      }
+      @if (auth.isOrganisateur() || auth.isAdmin()) {
+        <li><a routerLink="/organisateur" routerLinkActive="active">Organisateur</a></li>
+      }
+      @if (auth.isAdmin()) {
+        <li><a routerLink="/admin" routerLinkActive="active" class="navbar__admin-link">Admin</a></li>
+      }
+      <li><a routerLink="/artistes" routerLinkActive="active">Artistes</a></li>
+    </ul>
+    <div class="navbar__actions">
+      @if (auth.isLoggedIn()) {
+        <div class="navbar__user">
+          <div class="navbar__avatar-wrap">
+            <span class="navbar__avatar-initials">{{ auth.user()?.prenom?.[0] }}{{ auth.user()?.nom?.[0] }}</span>
+          </div>
+          <span class="navbar__username">{{ auth.user()?.prenom }} {{ auth.user()?.nom }}</span>
+          <span class="navbar__role-badge" [class]="'role-'+auth.user()?.role?.toLowerCase()">{{ auth.user()?.role }}</span>
+          <button class="navbar__logout" (click)="logout()" title="Déconnexion">⏻</button>
+        </div>
+      } @else {
+        <a routerLink="/login" class="navbar__btn navbar__btn--ghost">Connexion</a>
+        <a routerLink="/register" class="navbar__btn navbar__btn--primary">S'inscrire</a>
+      }
+    </div>
+    <button class="navbar__burger" (click)="toggle()" [class.open]="menuOpen">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="navbar__mobile" [class.open]="menuOpen">
+    <a routerLink="/" (click)="close()">🎵 Découvrir</a>
+    @if (auth.isLoggedIn()) {
+      <a routerLink="/tickets" (click)="close()">🎫 Mes Tickets</a>
+    }
+    @if (auth.isOrganisateur() || auth.isAdmin()) {
+      <a routerLink="/organisateur" (click)="close()">🎤 Organisateur</a>
+    }
+    @if (auth.isAdmin()) {
+      <a routerLink="/admin" (click)="close()">⚙️ Admin</a>
+    }
+    <a routerLink="/artistes" (click)="close()">🎭 Artistes</a>
+    @if (auth.isLoggedIn()) {
+      <button class="navbar__mobile-logout" (click)="logout()">⏻ Déconnexion</button>
+    } @else {
+      <a routerLink="/login" (click)="close()">🔑 Connexion</a>
+      <a routerLink="/register" (click)="close()">✨ S'inscrire</a>
+    }
+  </div>
+</nav>

@@ -1,0 +1,33 @@
+<div class="artistes-page">
+  <div class="artistes-page__inner">
+    <div class="artistes-page__header">
+      <h1>Artistes</h1>
+      <p>Découvrez tous les artistes présents sur EventHub</p>
+    </div>
+    <div class="artistes-grid">
+      @for(a of ar.artistes(); track a.idArtiste){
+        <div class="artiste-card">
+          <div class="artiste-card__img">
+            <img [src]="a.imageUrl" [alt]="a.nom"/>
+            <div class="artiste-card__img-overlay"></div>
+          </div>
+          <div class="artiste-card__body">
+            <h3>{{a.prenom}} {{a.nom}}</h3>
+            <span class="artiste-card__style">{{a.styleArtistique}}</span>
+            @if(getArtistEvents(a.idArtiste).length > 0){
+              <div class="artiste-card__events">
+                <span class="artiste-card__events-lbl">Prochains événements :</span>
+                @for(e of getArtistEvents(a.idArtiste); track e.id){
+                  <a [routerLink]="['/evenement', e.id]" class="artiste-card__event-link">
+                    <span>🎵 {{e.nom}}</span>
+                    <span class="artiste-card__event-date">{{formatDate(e.date)}}</span>
+                  </a>
+                }
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</div>

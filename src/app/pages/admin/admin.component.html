@@ -1,0 +1,115 @@
+<div class="admin-page">
+  <div class="admin-page__inner">
+    <div class="admin-page__header">
+      <div><h1>⚙️ Panneau Admin</h1><p>Gérez la plateforme EventHub</p></div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="admin-tabs">
+      <button [class.active]="tab()==='dashboard'" (click)="tab.set('dashboard')" type="button">📊 Dashboard</button>
+      <button [class.active]="tab()==='events'" (click)="tab.set('events')" type="button">🎭 Événements</button>
+      <button [class.active]="tab()==='artistes'" (click)="tab.set('artistes')" type="button">🎤 Artistes</button>
+      <button [class.active]="tab()==='users'" (click)="tab.set('users')" type="button">👥 Utilisateurs</button>
+    </div>
+
+    <!-- DASHBOARD -->
+    @if(tab()==='dashboard'){
+      <div class="admin-kpis">
+        <div class="kpi"><span class="kpi__icon">🎭</span><span class="kpi__val">{{ev.evenements().length}}</span><span class="kpi__lbl">Événements actifs</span></div>
+        <div class="kpi"><span class="kpi__icon">🎫</span><span class="kpi__val">{{ev.totalTickets()|number}}</span><span class="kpi__lbl">Tickets vendus</span></div>
+        <div class="kpi"><span class="kpi__icon">🎤</span><span class="kpi__val">{{ar.artistes().length}}</span><span class="kpi__lbl">Artistes</span></div>
+        <div class="kpi"><span class="kpi__icon">💰</span><span class="kpi__val">{{ev.totalTickets()*30|number}}€</span><span class="kpi__lbl">Revenus estimés</span></div>
+      </div>
+      <div class="admin-section">
+        <h2>Événements récents</h2>
+        <div class="admin-list">
+          @for(e of ev.evenements().slice(0,4); track e.id){
+            <div class="admin-list-row">
+              <img [src]="e.imageUrl" [alt]="e.nom"/>
+              <div class="admin-list-row__info">
+                <strong>{{e.nom}}</strong>
+                <span>{{formatDate(e.date)}} · {{e.lieu}}</span>
+              </div>
+              <div class="admin-list-row__bar">
+                <div class="mini-bar"><div class="mini-bar__fill" [style.width.%]="ev.getOccupancyPercent(e)" [style.background]="ev.getOccupancyPercent(e)>=90?'var(--red)':'#52b788'"></div></div>
+                <span>{{ev.getOccupancyPercent(e)}}%</span>
+              </div>
+              <span class="admin-list-row__price">{{e.prix}}€</span>
+              <a [routerLink]="['/evenement', e.id]" class="admin-list-row__btn">Voir</a>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- EVENTS TAB -->
+    @if(tab()==='events'){
+      <div class="admin-section">
+        <div class="admin-section__head">
+          <h2>Tous les événements ({{ev.evenements().length}})</h2>
+          <a routerLink="/organisateur" class="admin-btn-primary">+ Créer</a>
+        </div>
+        <div class="admin-list">
+          @for(e of ev.evenements(); track e.id){
+            <div class="admin-list-row">
+              <img [src]="e.imageUrl" [alt]="e.nom"/>
+              <div class="admin-list-row__info">
+                <strong>{{e.nom}}</strong>
+                <span>{{formatDate(e.date)}} · {{e.lieu}} · {{ev.getCategoryLabel(e.categorie??'')}}</span>
+              </div>
+              <span>{{e.nbTicketsVendus|number}}/{{e.capacite|number}} tickets</span>
+              <span class="admin-list-row__price">{{e.prix}}€</span>
+              <div class="admin-list-row__actions">
+                <a [routerLink]="['/evenement', e.id]" class="admin-list-row__btn">👁</a>
+                <button class="admin-list-row__btn admin-list-row__btn--danger" (click)="deleteEvent(e.id)" type="button">🗑</button>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- ARTISTES TAB -->
+    @if(tab()==='artistes'){
+      <div class="admin-section">
+        <h2>Artistes ({{ar.artistes().length}})</h2>
+        <div class="artistes-admin-grid">
+          @for(a of ar.artistes(); track a.idArtiste){
+            <div class="artiste-admin-card">
+              <img [src]="a.imageUrl" [alt]="a.nom"/>
+              <div>
+                <strong>{{a.prenom}} {{a.nom}}</strong>
+                <span>{{a.styleArtistique}}</span>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- USERS TAB -->
+    @if(tab()==='users'){
+      <div class="admin-section">
+        <h2>Utilisateurs simulés</h2>
+        <div class="admin-users">
+          <div class="admin-user-row">
+            <div class="admin-user-avatar" style="background:#52b788">A</div>
+            <div><strong>Admin System</strong><span>admin · ADMIN</span></div>
+            <span class="admin-user-role admin-user-role--admin">ADMIN</span>
+          </div>
+          <div class="admin-user-row">
+            <div class="admin-user-avatar" style="background:var(--red)">S</div>
+            <div><strong>Sophie Martin</strong><span>sophie · 2 tickets</span></div>
+            <span class="admin-user-role admin-user-role--user">UTILISATEUR</span>
+          </div>
+          <div class="admin-user-row">
+            <div class="admin-user-avatar" style="background:#2D211C">J</div>
+            <div><strong>Jean Dupont</strong><span>jean · Organisateur</span></div>
+            <span class="admin-user-role admin-user-role--org">ORGANISATEUR</span>
+          </div>
+        </div>
+        <p class="admin-note">⚠ Les données utilisateurs seront chargées depuis le backend Spring Boot.</p>
+      </div>
+    }
+  </div>
+</div>

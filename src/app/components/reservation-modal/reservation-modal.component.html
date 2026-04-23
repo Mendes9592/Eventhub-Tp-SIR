@@ -1,0 +1,87 @@
+@if(ev.showModal() && ev.selectedEvent()){
+<div class="modal-bd" (click)="onBackdrop($event)">
+  <div class="modal" role="dialog">
+    <!-- DETAIL -->
+    @if(step==='detail'){
+    <div class="modal__box">
+      <button class="modal__close" (click)="close()" type="button">✕</button>
+      <div class="modal__img">
+        <img [src]="ev.selectedEvent()!.imageUrl" [alt]="ev.selectedEvent()!.nom"/>
+        <div class="modal__img-overlay"></div>
+        <div class="modal__img-title">
+          <span class="modal__cat">{{ev.getCategoryLabel(ev.selectedEvent()!.categorie??'')}}</span>
+          <h2>{{ev.selectedEvent()!.nom}}</h2>
+        </div>
+      </div>
+      <div class="modal__body">
+        <div class="modal__info-grid">
+          <div class="modal__info-item"><span>📅</span><div><small>Date</small><strong>{{formatDate(ev.selectedEvent()!.date)}} · {{ev.selectedEvent()!.heure}}</strong></div></div>
+          <div class="modal__info-item"><span>📍</span><div><small>Lieu</small><strong>{{ev.selectedEvent()!.lieu}}</strong></div></div>
+        </div>
+        @if(ev.selectedEvent()!.artistes?.length){
+          <div class="modal__artistes">
+            @for(a of ev.selectedEvent()!.artistes; track a.idArtiste){
+              <span class="modal__artiste-chip">🎤 {{a.prenom}} {{a.nom}}</span>
+            }
+          </div>
+        }
+        @if(ev.selectedEvent()!.organisateur){
+          <div class="modal__org">🎭 Organisé par <strong>{{ev.selectedEvent()!.organisateur!.prenom}} {{ev.selectedEvent()!.organisateur!.nom}}</strong></div>
+        }
+        @if(ev.selectedEvent()!.description){
+          <p class="modal__desc">{{ev.selectedEvent()!.description}}</p>
+        }
+        @if(ev.selectedEvent()!.capacite){
+          <div class="modal__occ">
+            <div class="modal__occ-hd"><span>Disponibilité</span><span>{{ev.selectedEvent()!.nbTicketsVendus|number}} / {{ev.selectedEvent()!.capacite|number}}</span></div>
+            <div class="modal__occ-bar"><div class="modal__occ-fill" [class]="occCls" [style.width.%]="pct"></div></div>
+          </div>
+        }
+        @if(!auth.isLoggedIn()){
+          <div class="modal__login-warn">
+            <span>🔑</span> <span>Vous devez être <a routerLink="/login" (click)="close()">connecté</a> pour réserver.</span>
+          </div>
+        } @else {
+          <div class="modal__qty">
+            <span>Nombre de billets</span>
+            <div class="modal__qty-ctrl">
+              <button (click)="decr()" [disabled]="qty<=1" type="button">−</button>
+              <span>{{qty}}</span>
+              <button (click)="incr()" [disabled]="qty>=10" type="button">+</button>
+            </div>
+          </div>
+          <div class="modal__footer">
+            <div><small class="modal__price-lbl">Total</small><span class="modal__price-val">{{total}}€</span></div>
+            <button class="modal__btn-primary" (click)="toConfirm()" type="button">Continuer →</button>
+          </div>
+        }
+      </div>
+    </div>}
+
+    <!-- CONFIRM -->
+    @if(step==='confirm'){
+    <div class="modal__box modal__box--sm">
+      <button class="modal__close modal__close--dark" (click)="close()" type="button">✕</button>
+      <div class="modal__confirm-hd"><span>🎫</span><h2>Confirmer la réservation</h2></div>
+      <div class="modal__recap">
+        <div class="modal__recap-row"><span>Événement</span><strong>{{ev.selectedEvent()!.nom}}</strong></div>
+        <div class="modal__recap-row"><span>Date</span><strong>{{formatDate(ev.selectedEvent()!.date)}}</strong></div>
+        <div class="modal__recap-row"><span>Lieu</span><strong>{{ev.selectedEvent()!.lieu}}</strong></div>
+        <div class="modal__recap-row"><span>Billets</span><strong>{{qty}}</strong></div>
+        <div class="modal__recap-row modal__recap-row--total"><span>Total</span><strong>{{total}}€</strong></div>
+      </div>
+      <div class="modal__confirm-actions">
+        <button class="modal__btn-secondary" (click)="back()" type="button">← Retour</button>
+        <button class="modal__btn-primary" (click)="confirm()" type="button">✓ Confirmer</button>
+      </div>
+    </div>}
+
+    <!-- SUCCESS -->
+    @if(step==='success'){
+    <div class="modal__box modal__box--sm modal__box--success">
+      <span class="modal__success-icon">🎉</span>
+      <h2>Réservation confirmée !</h2>
+      <p>Vos billets sont disponibles dans <strong>Mes Tickets</strong>.</p>
+    </div>}
+  </div>
+</div>}

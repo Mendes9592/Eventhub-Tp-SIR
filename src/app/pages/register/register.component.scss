@@ -1,0 +1,27 @@
+.auth-page{min-height:calc(100vh - 68px);display:flex;align-items:center;justify-content:center;padding:24px;background:var(--beige)}
+.auth-card{background:var(--white);border-radius:20px;padding:40px;width:100%;max-width:480px;box-shadow:var(--card-shadow);animation:fadeInUp .5s ease;
+  &__logo{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:var(--dark);margin-bottom:24px; span{color:var(--red)}}
+  h1{font-size:1.8rem;font-weight:700;margin-bottom:6px}
+  &__sub{font-size:.9rem;color:var(--dark-40);margin-bottom:20px}
+  &__error{background:rgba(200,41,9,.08);border:1px solid rgba(200,41,9,.2);color:var(--red);padding:10px 14px;border-radius:8px;font-size:.85rem;margin-bottom:16px}
+  &__link{text-align:center;font-size:.88rem;color:var(--dark-40);margin-top:20px; a{color:var(--red);font-weight:600}}
+}
+.auth-form{display:flex;flex-direction:column;gap:16px;
+  &__row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  &__group{display:flex;flex-direction:column;gap:6px; label{font-size:.82rem;font-weight:600;color:var(--dark-80)}}
+  input[type=text],input[type=password]{padding:12px 14px;border:1.5px solid var(--dark-10);border-radius:10px;font-size:.9rem;font-family:'DM Sans',sans-serif;color:var(--dark);outline:none;transition:border-color .2s;width:100%;
+    &:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(200,41,9,.08)}}
+  &__roles{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  &__role{display:flex;flex-direction:column;align-items:center;gap:4px;padding:16px;border:2px solid var(--dark-10);border-radius:12px;cursor:pointer;transition:all .2s;text-align:center;
+    input{display:none}
+    &.selected{border-color:var(--red);background:rgba(200,41,9,.04)}
+    &:hover{border-color:var(--pink)}
+    &-icon{font-size:1.8rem}
+    &-title{font-size:.88rem;font-weight:700;color:var(--dark)}
+    &-desc{font-size:.72rem;color:var(--dark-40)}
+  }
+  &__submit{background:var(--red);color:#fff;padding:14px;border-radius:10px;font-size:.95rem;font-weight:600;border:none;cursor:pointer;transition:all .2s;box-shadow:0 4px 16px rgba(200,41,9,.3);margin-top:4px;
+    &:hover:not(:disabled){background:var(--red-light);transform:translateY(-1px)}
+    &:disabled{opacity:.6;cursor:not-allowed}}
+}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}

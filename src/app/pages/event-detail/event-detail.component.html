@@ -1,0 +1,118 @@
+@if (event()) {
+<div class="event-detail">
+  <!-- Hero Banner -->
+  <div class="event-detail__hero">
+    <img [src]="event()!.imageUrl" [alt]="event()!.nom"/>
+    <div class="event-detail__hero-overlay"></div>
+    <div class="event-detail__hero-content">
+      <a routerLink="/" class="event-detail__back">← Retour</a>
+      <span class="event-detail__cat">{{ ev.getCategoryLabel(event()!.categorie ?? '') }}</span>
+      <h1>{{ event()!.nom }}</h1>
+      <div class="event-detail__hero-meta">
+        <span>📅 {{ formatDate(event()!.date) }} · {{ event()!.heure }}</span>
+        <span>📍 {{ event()!.lieu }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="event-detail__body">
+    <div class="event-detail__main">
+
+      @if (event()!.description) {
+        <section class="event-detail__section">
+          <h2>À propos</h2>
+          <p>{{ event()!.description }}</p>
+        </section>
+      }
+
+      @if (event()!.artistes?.length) {
+        <section class="event-detail__section">
+          <h2>Artistes au programme</h2>
+          <div class="event-detail__artistes">
+            @for (a of event()!.artistes!; track a.idArtiste) {
+              <div class="artiste-chip">
+                @if (a.imageUrl) {
+                  <img [src]="a.imageUrl" [alt]="a.nom"/>
+                }
+                <div>
+                  <span class="artiste-chip__name">{{ a.prenom }} {{ a.nom }}</span>
+                  <span class="artiste-chip__style">{{ a.styleArtistique }}</span>
+                </div>
+              </div>
+            }
+          </div>
+        </section>
+      }
+
+      @if (event()!.organisateur) {
+        <section class="event-detail__section">
+          <h2>Organisateur</h2>
+          <div class="event-detail__org">
+            <div class="event-detail__org-avatar">
+              {{ orgInitiales }}
+            </div>
+            <div>
+              <strong>{{ event()!.organisateur!.prenom }} {{ event()!.organisateur!.nom }}</strong>
+              <span>Organisateur certifié</span>
+            </div>
+          </div>
+        </section>
+      }
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="event-detail__sidebar">
+      <div class="event-detail__card">
+        <div class="event-detail__price-block">
+          <span class="event-detail__price-from">À partir de</span>
+          <span class="event-detail__price">{{ event()!.prix }}€</span>
+        </div>
+
+        @if (event()!.capacite) {
+          <div class="event-detail__occ">
+            <div class="event-detail__occ-hd">
+              <span>Disponibilité</span>
+              <span>{{ event()!.nbTicketsVendus | number }} / {{ event()!.capacite | number }}</span>
+            </div>
+            <div class="event-detail__occ-bar">
+              <div class="event-detail__occ-fill"
+                   [class]="occCls"
+                   [style.width.%]="pct">
+              </div>
+            </div>
+            <span class="event-detail__occ-pct">{{ pct }}% des places occupées</span>
+          </div>
+        }
+
+        <div class="event-detail__info-list">
+          <div>
+            <span>📅</span>
+            <div><small>Date</small><strong>{{ formatDate(event()!.date) }}</strong></div>
+          </div>
+          <div>
+            <span>⏰</span>
+            <div><small>Heure</small><strong>{{ event()!.heure }}</strong></div>
+          </div>
+          <div>
+            <span>📍</span>
+            <div><small>Lieu</small><strong>{{ event()!.lieu }}</strong></div>
+          </div>
+        </div>
+
+        @if (!auth.isLoggedIn()) {
+          <a routerLink="/login" class="event-detail__cta">🔑 Se connecter pour réserver</a>
+        } @else if (hasTicket) {
+          <div class="event-detail__cta event-detail__cta--owned">✓ Vous avez déjà un billet</div>
+          <a routerLink="/tickets" class="event-detail__link-tickets">Voir mes tickets →</a>
+        } @else {
+          <button class="event-detail__cta" (click)="reserve()" type="button">
+            Réserver maintenant →
+          </button>
+        }
+      </div>
+    </aside>
+  </div>
+
+  <app-reservation-modal/>
+</div>
+}

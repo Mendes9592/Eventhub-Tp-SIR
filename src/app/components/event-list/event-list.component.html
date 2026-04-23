@@ -1,0 +1,21 @@
+<section class="el">
+  <div class="el__inner">
+    <div class="el__header">
+      <h2 class="el__title">Événements à venir</h2>
+      <span class="el__count">{{ev.filteredEvenements().length}} résultat(s)</span>
+    </div>
+    @if(ev.filteredEvenements().length > 0){
+      <div class="el__grid">
+        @for(e of ev.filteredEvenements(); track e.id){
+          <app-event-card [event]="e" class="el__card"/>
+        }
+      </div>
+    } @else {
+      <div class="el__empty">
+        <span>🎵</span>
+        <p>Aucun événement trouvé.</p>
+      </div>
+    }
+  </div>
+  <app-reservation-modal/>
+</section>

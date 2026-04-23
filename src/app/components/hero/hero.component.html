@@ -1,0 +1,26 @@
+<section class="hero">
+  <div class="hero__bg">
+    <img src="https://images.unsplash.com/photo-1524368535928-5b5e00ddc76b?w=1400&q=80" alt="Concert"/>
+    <div class="hero__overlay"></div>
+  </div>
+  <div class="hero__content">
+    <span class="hero__eyebrow">🎵 Plateforme N°1 en France</span>
+    <h1 class="hero__title">Découvrez les meilleurs<br><em>événements</em></h1>
+    <p class="hero__sub">Des concerts inoubliables vous attendent</p>
+    <div class="hero__search">
+      <input type="text" [(ngModel)]="search" (ngModelChange)="onSearch()" placeholder="Rechercher un événement, un lieu..." class="hero__search-input"/>
+      <button class="hero__search-btn" (click)="onSearch()" type="button">🔍 Rechercher</button>
+    </div>
+    <div class="hero__actions">
+      @if (!auth.isLoggedIn()) {
+        <a routerLink="/register" class="hero__btn hero__btn--primary">Commencer gratuitement</a>
+        <a routerLink="/login" class="hero__btn hero__btn--ghost">Se connecter</a>
+      } @else {
+        <a routerLink="/tickets" class="hero__btn hero__btn--primary">Mes Tickets 🎫</a>
+        @if (auth.isOrganisateur() || auth.isAdmin()) {
+          <a routerLink="/organisateur" class="hero__btn hero__btn--ghost">Créer un événement</a>
+        }
+      }
+    </div>
+  </div>
+</section>

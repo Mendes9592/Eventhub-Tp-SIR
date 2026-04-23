@@ -1,0 +1,115 @@
+<div class="tickets-page">
+  <div class="tickets-page__inner">
+    <div class="tickets-page__header">
+      <h1>Mes Tickets</h1>
+      <p>{{ auth.user()?.prenom }} {{ auth.user()?.nom }} — {{ tk.tickets().length }} billet(s)</p>
+    </div>
+
+    <!-- Confirm Cancel Dialog -->
+    @if(confirmCancel() !== null){
+      <div class="cancel-dialog-bd">
+        <div class="cancel-dialog">
+          <span class="cancel-dialog__icon">⚠️</span>
+          <h3>Annuler ce billet ?</h3>
+          <p>Cette action est irréversible. Le billet passera en statut "Annulé".</p>
+          <div class="cancel-dialog__actions">
+            <button class="cancel-dialog__btn-secondary" (click)="cancelAbort()" type="button">Non, garder</button>
+            <button class="cancel-dialog__btn-danger" (click)="cancelConfirmed()" type="button">Oui, annuler</button>
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- Billets valides -->
+    @if(tk.validTickets().length > 0){
+      <div class="tickets-section">
+        <h2 class="tickets-section__title">
+          <span class="dot dot--valid"></span> Billets valides ({{ tk.validTickets().length }})
+        </h2>
+        <div class="tickets-list">
+          @for(t of tk.validTickets(); track t.idTicket){
+            <div class="ticket-item">
+              <div class="ticket-item__img">
+                <img [src]="t.evenement?.imageUrl" [alt]="t.evenement?.nom"/>
+                <span class="ticket-item__status ticket-item__status--valid">✓ Valide</span>
+              </div>
+              <div class="ticket-item__content">
+                <span class="ticket-item__cat">{{ t.evenement?.categorie }}</span>
+                <h3>{{ t.evenement?.nom }}</h3>
+                <div class="ticket-item__info">
+                  <span>📅 {{ formatDate(t.evenement!.date) }} · {{ t.evenement?.heure }}</span>
+                  <span>📍 {{ t.evenement?.lieu }}</span>
+                  <span>🎫 N° {{ t.numeroTicket }}</span>
+                </div>
+                <div class="ticket-item__ref">Réf : TKT-{{ t.idTicket }}</div>
+              </div>
+              <div class="ticket-item__aside">
+                <div class="ticket-item__price">{{ t.evenement?.prix }}€</div>
+                <svg class="ticket-item__qr" viewBox="0 0 80 80" width="60" height="60">
+                  <rect x="0" y="0" width="30" height="30" fill="none" stroke="currentColor" stroke-width="4"/>
+                  <rect x="10" y="10" width="10" height="10" fill="currentColor"/>
+                  <rect x="50" y="0" width="30" height="30" fill="none" stroke="currentColor" stroke-width="4"/>
+                  <rect x="60" y="10" width="10" height="10" fill="currentColor"/>
+                  <rect x="0" y="50" width="30" height="30" fill="none" stroke="currentColor" stroke-width="4"/>
+                  <rect x="10" y="60" width="10" height="10" fill="currentColor"/>
+                  <rect x="40" y="40" width="8" height="8" fill="currentColor"/>
+                  <rect x="52" y="40" width="8" height="8" fill="currentColor"/>
+                  <rect x="64" y="40" width="8" height="8" fill="currentColor"/>
+                </svg>
+                <div class="ticket-item__btns">
+                  <button class="ticket-item__btn ticket-item__btn--dl" type="button">⬇ PDF</button>
+                  <button class="ticket-item__btn ticket-item__btn--cancel" (click)="askCancel(t.idTicket)" type="button">✕ Annuler</button>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- Historique -->
+    @if(tk.usedTickets().length > 0){
+      <div class="tickets-section">
+        <h2 class="tickets-section__title">
+          <span class="dot dot--used"></span> Historique ({{ tk.usedTickets().length }})
+        </h2>
+        <div class="tickets-list">
+          @for(t of tk.usedTickets(); track t.idTicket){
+            <div class="ticket-item ticket-item--faded">
+              <div class="ticket-item__img">
+                <img [src]="t.evenement?.imageUrl" [alt]="t.evenement?.nom"/>
+                <span class="ticket-item__status" [class.ticket-item__status--used]="t.statut==='UTILISE'" [class.ticket-item__status--cancelled]="t.statut==='ANNULE'">
+                  {{t.statut==='UTILISE'?'✗ Utilisé':'✕ Annulé'}}
+                </span>
+              </div>
+              <div class="ticket-item__content">
+                <span class="ticket-item__cat">{{ t.evenement?.categorie }}</span>
+                <h3>{{ t.evenement?.nom }}</h3>
+                <div class="ticket-item__info">
+                  <span>📅 {{ formatDate(t.evenement!.date) }}</span>
+                  <span>📍 {{ t.evenement?.lieu }}</span>
+                  <span>🎫 N° {{ t.numeroTicket }}</span>
+                </div>
+                <div class="ticket-item__ref">Réf : TKT-{{ t.idTicket }}</div>
+              </div>
+              <div class="ticket-item__aside">
+                <div class="ticket-item__price">{{ t.evenement?.prix }}€</div>
+                <button class="ticket-item__btn ticket-item__btn--disabled" disabled type="button">Expiré</button>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- Aucun billet -->
+    @if(tk.tickets().length === 0){
+      <div class="tickets-page__empty">
+        <span>🎫</span>
+        <h3>Aucun billet pour l'instant</h3>
+        <p>Explorez les événements et réservez votre première place !</p>
+        <a routerLink="/" class="tickets-page__empty-btn">Explorer les événements →</a>
+      </div>
+    }
+  </div>
+</div>

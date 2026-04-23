@@ -1,0 +1,53 @@
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-card__logo"><span>◈</span> EventHub</div>
+    <h1>Créer un compte</h1>
+    <p class="auth-card__sub">Rejoignez EventHub gratuitement</p>
+    @if(error()){<div class="auth-card__error">⚠ {{error()}}</div>}
+    <form (ngSubmit)="submit()" class="auth-form">
+      <div class="auth-form__row">
+        <div class="auth-form__group">
+          <label>Prénom *</label>
+          <input type="text" [(ngModel)]="form.prenom" name="prenom" placeholder="ex: Sophie" required/>
+        </div>
+        <div class="auth-form__group">
+          <label>Nom *</label>
+          <input type="text" [(ngModel)]="form.nom" name="nom" placeholder="ex: Martin" required/>
+        </div>
+      </div>
+      <div class="auth-form__group">
+        <label>Nom d'utilisateur *</label>
+        <input type="text" [(ngModel)]="form.username" name="username" placeholder="ex: sophie_martin" required autocomplete="username"/>
+      </div>
+      <div class="auth-form__group">
+        <label>Mot de passe *</label>
+        <input type="password" [(ngModel)]="form.password" name="password" placeholder="••••••••" required autocomplete="new-password"/>
+      </div>
+      <div class="auth-form__group">
+        <label>Confirmer le mot de passe *</label>
+        <input type="password" [(ngModel)]="form.confirmPassword" name="confirmPassword" placeholder="••••••••" required autocomplete="new-password"/>
+      </div>
+      <div class="auth-form__group">
+        <label>Type de compte</label>
+        <div class="auth-form__roles">
+          <label class="auth-form__role" [class.selected]="form.role==='UTILISATEUR'">
+            <input type="radio" [(ngModel)]="form.role" name="role" value="UTILISATEUR"/>
+            <span class="auth-form__role-icon">🎫</span>
+            <span class="auth-form__role-title">Utilisateur</span>
+            <span class="auth-form__role-desc">Acheter des billets</span>
+          </label>
+          <label class="auth-form__role" [class.selected]="form.role==='ORGANISATEUR'">
+            <input type="radio" [(ngModel)]="form.role" name="role" value="ORGANISATEUR"/>
+            <span class="auth-form__role-icon">🎤</span>
+            <span class="auth-form__role-title">Organisateur</span>
+            <span class="auth-form__role-desc">Créer des événements</span>
+          </label>
+        </div>
+      </div>
+      <button class="auth-form__submit" type="submit" [disabled]="loading()">
+        {{loading() ? 'Création...' : 'Créer mon compte →'}}
+      </button>
+    </form>
+    <p class="auth-card__link">Déjà un compte ? <a routerLink="/login">Se connecter</a></p>
+  </div>
+</div>
