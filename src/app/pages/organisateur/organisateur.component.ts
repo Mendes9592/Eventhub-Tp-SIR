@@ -14,7 +14,7 @@ export class OrganisateurComponent {
   deleteConfirm = signal<number|null>(null);
 
   form = this.emptyForm();
-  emptyForm(){return{nom:'',date:'',heure:'20:00',lieu:'',categorie:'electronique',prix:30,capacite:500,description:'',imageUrl:'https://images.unsplash.com/photo-1524368535928-5b5e00ddc76b?w=600&q=80'};}
+  emptyForm(){return{nom:'',date:'',heure:'20:00',lieu:'',categorie:'electronique',prix:30,capacite:500,description:'',imageUrl:'assets/images/events/luna-eclipse.jpg'};}
 
   get myEvents(){ return this.ev.evenements(); }
   formatDate(d:string){return new Date(d).toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'});}

@@ -54,8 +54,8 @@ export class AuthService {
   private simulateLogin(req: LoginRequest): Observable<AuthResponse> {
     const users: AnyUser[] = [
       { id: 1, nom: 'Admin', prenom: 'System', username: 'admin', role: 'ADMIN' },
-      { id: 2, nom: 'Martin', prenom: 'Sophie', username: 'sophie', role: 'UTILISATEUR', nbreTicket: 2 },
-      { id: 3, nom: 'Dupont', prenom: 'Jean', username: 'jean', role: 'ORGANISATEUR' },
+      { id: 2, nom: 'Mendes', prenom: 'Mamy', username: 'Crou-sita', role: 'UTILISATEUR', nbreTicket: 2 },
+      { id: 3, nom: 'Noubisi', prenom: 'Ines', username: 'I-Noubisi', role: 'ORGANISATEUR' },
     ];
     const found = users.find(u => u.username === req.username);
     if (!found) throw new Error('Utilisateur introuvable');
