@@ -52,8 +52,8 @@ L'application sera disponible sur **http://localhost:4200**
 | Utilisateur | Mot de passe | Rôle |
 |-------------|-------------|------|
 | `admin` | n'importe lequel | Admin |
-| `sophie` | n'importe lequel | Utilisateur |
-| `jean` | n'importe lequel | Organisateur |
+| `Mamy` | test12345| Utilisateur |
+| `Ines` | test12345| Organisateur |
 
 ---
 
