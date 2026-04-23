@@ -1,28 +1,24 @@
-# 🎵 EventHub — Application de Gestion d'Événements
+#  EventHub — Application de Gestion d'Événements
 
-![Angular](https://img.shields.io/badge/Angular-18-red?logo=angular)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.4-blue?logo=typescript)
-![Java](https://img.shields.io/badge/Java-JPA-orange?logo=java)
-![License](https://img.shields.io/badge/License-MIT-green)
 
 > Plateforme de gestion et de réservation d'événements musicaux — développée avec Angular 18 (frontend) et Java JPA (backend).
 
 ---
 
-## 📸 Aperçu
+##  Aperçu
 
 | Page | Description |
 |------|-------------|
-| 🏠 Accueil | Liste des événements avec filtres par catégorie et recherche |
-| 🎫 Mes Tickets | Portefeuille de billets avec QR code et annulation |
-| 🎤 Artistes | Galerie des artistes et leurs événements |
-| 🎭 Détail Événement | Page complète avec réservation en 3 étapes |
-| ⚙️ Organisateur | CRUD complet des événements (rôle protégé) |
-| 🔐 Admin | Dashboard KPIs et gestion globale (rôle protégé) |
+| Accueil | Liste des événements avec filtres par catégorie et recherche |
+| Mes Tickets | Portefeuille de billets avec QR code et annulation |
+|  Artistes | Galerie des artistes et leurs événements |
+| Détail Événement | Page complète avec réservation en 3 étapes |
+| Organisateur | CRUD complet des événements (rôle protégé) |
+| Admin | Dashboard KPIs et gestion globale (rôle protégé) |
 
 ---
 
-## 🚀 Démarrage rapide
+##  Démarrage rapide
 
 ### Prérequis
 
@@ -47,17 +43,17 @@ L'application sera disponible sur **http://localhost:4200**
 
 ---
 
-## 🔐 Comptes de démonstration
+##  Comptes de démonstration
 
 | Utilisateur | Mot de passe | Rôle |
 |-------------|-------------|------|
 | `admin` | n'importe lequel | Admin |
-| `sophie` | n'importe lequel | Utilisateur |
-| `jean` | n'importe lequel | Organisateur |
+| `Mamy` | test12345| Utilisateur |
+| `Ines` | test12345| Organisateur |
 
 ---
 
-## 🏗️ Architecture du projet
+##  Architecture du projet
 
 ```
 src/
@@ -95,7 +91,7 @@ src/
 
 ---
 
-## 🗃️ Entités JPA (Backend)
+##  Entités JPA (Backend)
 
 Le frontend est aligné sur les entités Java suivantes :
 
@@ -112,7 +108,7 @@ Ticket              → numeroTicket, Evenement, Utilisateur
 
 ---
 
-## 🎨 Palette de couleurs
+##  Palette de couleurs
 
 | Variable | Couleur | Usage |
 |----------|---------|-------|
@@ -123,7 +119,7 @@ Ticket              → numeroTicket, Evenement, Utilisateur
 
 ---
 
-## 🔌 Connexion au Backend Spring Boot
+##  Connexion au Backend Spring Boot
 
 Les services sont prêts à être connectés à une API REST. Remplacez la simulation dans chaque service par des appels HTTP :
 
@@ -156,7 +152,7 @@ POST   /api/auth/register       → Inscription
 
 ---
 
-## 🛠️ Technologies utilisées
+##  Technologies utilisées
 
 | Technologie | Version | Usage |
 |-------------|---------|-------|
@@ -170,7 +166,7 @@ POST   /api/auth/register       → Inscription
 
 ---
 
-## 📦 Scripts disponibles
+##  Scripts disponibles
 
 ```bash
 npm start          # Lance le serveur de dev (ng serve)
@@ -180,12 +176,12 @@ ng generate component nom   # Créer un nouveau composant
 
 ---
 
-## 👥 Auteurs
+## Auteurs
 
 Projet réalisé dans le cadre du cours **SIR — ISTIC MIAGE 1**
 
 ---
 
-## 📄 Licence
+##  Licence
 
 Ce projet est sous licence MIT.
