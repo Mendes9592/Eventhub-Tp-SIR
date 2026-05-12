@@ -1,0 +1,224 @@
+<div class="artistes-admin">
+
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-left">
+      <h1>🎤 Gestion des Artistes</h1>
+      <span class="count-badge">{{ ar.artistes().length }} artiste(s)</span>
+    </div>
+    <button class="btn-primary" (click)="startCreate()" *ngIf="tab() === 'list'">
+      + Ajouter un artiste
+    </button>
+  </div>
+
+  <!-- LISTE -->
+  <ng-container *ngIf="tab() === 'list'">
+
+    <!-- Barre de recherche -->
+    <div class="search-bar">
+      <input
+        type="text"
+        placeholder="🔍 Rechercher par nom, prénom ou style..."
+        [value]="searchQuery()"
+        (input)="searchQuery.set($any($event.target).value)"
+      />
+    </div>
+
+    <!-- Tableau -->
+    <div class="table-wrapper">
+      <table class="artistes-table" *ngIf="filteredArtistes.length > 0; else empty">
+        <thead>
+          <tr>
+            <th>Artiste</th>
+            <th>Style</th>
+            <th>Nationalité</th>
+            <th>Popularité</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let a of filteredArtistes">
+            <td class="artiste-info">
+              <div class="avatar" [style.background]="avatarColor(a.idArtiste)">
+                {{ a.prenom[0] }}{{ a.nom[0] }}
+              </div>
+              <div>
+                <strong>{{ a.prenom }} {{ a.nom }}</strong>
+                <small *ngIf="a.siteWeb">
+                  <a [href]="a.siteWeb" target="_blank">🌐 Site web</a>
+                </small>
+              </div>
+            </td>
+            <td>
+              <span class="style-badge">{{ a.styleArtistique ?? '—' }}</span>
+            </td>
+            <td>{{ a.nationalite ?? '—' }}</td>
+            <td>
+              <div class="popularite-bar">
+                <div class="bar-fill" [style.width.%]="a.popularite ?? 0" [style.background]="populariteColor(a.popularite ?? 0)"></div>
+                <span [style.color]="populariteColor(a.popularite ?? 0)">{{ populariteLabel(a.popularite ?? 0) }}</span>
+              </div>
+            </td>
+            <td class="actions">
+              <button class="btn-edit" (click)="startEdit(a)" title="Modifier">✏️</button>
+              <button class="btn-delete" (click)="askDelete(a.idArtiste!)" title="Supprimer">🗑</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <ng-template #empty>
+        <div class="empty-state">
+          <span>🎵</span>
+          <p>Aucun artiste trouvé</p>
+          <button class="btn-primary" (click)="startCreate()">Ajouter le premier artiste</button>
+        </div>
+      </ng-template>
+    </div>
+
+    <!-- Confirmation suppression -->
+    <div class="modal-overlay" *ngIf="deleteConfirm() !== null" (click)="cancelDelete()">
+      <div class="confirm-modal" (click)="$event.stopPropagation()">
+        <h3>⚠️ Confirmer la suppression</h3>
+        <p>Cette action est irréversible. L'artiste sera supprimé définitivement.</p>
+        <div class="confirm-actions">
+          <button class="btn-secondary" (click)="cancelDelete()">Annuler</button>
+          <button class="btn-danger" (click)="confirmDelete()">Supprimer</button>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- FORMULAIRE CRÉER / MODIFIER -->
+  <ng-container *ngIf="tab() === 'create' || tab() === 'edit'">
+    <div class="form-container">
+
+      <div class="form-header">
+        <h2>{{ tab() === 'create' ? '➕ Nouvel artiste' : '✏️ Modifier ' + editTarget()?.prenom + ' ' + editTarget()?.nom }}</h2>
+        <button class="btn-back" (click)="cancel()">← Retour à la liste</button>
+      </div>
+
+      <form class="artiste-form" (ngSubmit)="submit()">
+
+        <!-- Identité -->
+        <section class="form-section">
+          <h3>👤 Identité</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Prénom <span class="required">*</span></label>
+              <input type="text" [(ngModel)]="form.prenom" name="prenom" placeholder="ex: Luna" required />
+            </div>
+            <div class="form-group">
+              <label>Nom <span class="required">*</span></label>
+              <input type="text" [(ngModel)]="form.nom" name="nom" placeholder="ex: Eclipse" required />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Date de naissance</label>
+              <input type="date" [(ngModel)]="form.dateNaissance" name="dateNaissance" />
+            </div>
+            <div class="form-group">
+              <label>Nationalité</label>
+              <select [(ngModel)]="form.nationalite" name="nationalite">
+                <option *ngFor="let n of nationalites" [value]="n">{{ n }}</option>
+              </select>
+            </div>
+          </div>
+        </section>
+
+        <!-- Artistique -->
+        <section class="form-section">
+          <h3>🎵 Profil artistique</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Style artistique</label>
+              <select [(ngModel)]="form.styleArtistique" name="styleArtistique">
+                <option value="">-- Choisir un style --</option>
+                <option *ngFor="let s of styles" [value]="s">{{ s }}</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Site web</label>
+              <input type="url" [(ngModel)]="form.siteWeb" name="siteWeb" placeholder="https://..." />
+            </div>
+          </div>
+
+          <!-- Popularité slider -->
+          <div class="form-group full-width">
+            <label>
+              Popularité :
+              <strong [style.color]="populariteColor(form.popularite)">
+                {{ form.popularite }}/100 — {{ populariteLabel(form.popularite) }}
+              </strong>
+            </label>
+            <div class="slider-container">
+              <input
+                type="range"
+                min="0" max="100"
+                [(ngModel)]="form.popularite"
+                name="popularite"
+                class="popularite-slider"
+              />
+              <div class="slider-track">
+                <div class="slider-fill" [style.width.%]="form.popularite" [style.background]="populariteColor(form.popularite)"></div>
+              </div>
+            </div>
+            <div class="popularite-labels">
+              <span>🌱 Émergent</span>
+              <span>🎵 En montée</span>
+              <span>🔥 Populaire</span>
+              <span>⭐ Superstar</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Description -->
+        <section class="form-section">
+          <h3>📝 Description</h3>
+          <div class="form-group full-width">
+            <label>Biographie / Description</label>
+            <textarea
+              [(ngModel)]="form.description"
+              name="description"
+              placeholder="Décrivez l'artiste, son style, son parcours..."
+              rows="4"
+            ></textarea>
+            <small>{{ form.description.length }}/500 caractères</small>
+          </div>
+        </section>
+
+        <!-- Aperçu -->
+        <section class="form-section preview-section" *ngIf="form.nom || form.prenom">
+          <h3>👁 Aperçu de la fiche</h3>
+          <div class="artiste-preview-card">
+            <div class="preview-avatar">{{ form.prenom.charAt(0) || '?' }}{{ form.nom.charAt(0) || '?' }}</div>
+            <div class="preview-info">
+              <h4>{{ form.prenom }} {{ form.nom }}</h4>
+              <p class="preview-style">{{ form.styleArtistique || 'Style non défini' }}</p>
+              <p class="preview-nationalite">🌍 {{ form.nationalite }}</p>
+              <div class="preview-pop">
+                <div class="mini-bar">
+                  <div [style.width.%]="form.popularite" [style.background]="populariteColor(form.popularite)"></div>
+                </div>
+                <span>{{ form.popularite }}/100</span>
+              </div>
+              <p class="preview-desc" *ngIf="form.description">{{ form.description | slice:0:120 }}{{ form.description.length > 120 ? '...' : '' }}</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Boutons -->
+        <div class="form-actions">
+          <button type="button" class="btn-secondary" (click)="cancel()">Annuler</button>
+          <button type="submit" class="btn-primary" [disabled]="loading()">
+            <span *ngIf="!loading()">{{ tab() === 'create' ? '✅ Créer l\'artiste' : '💾 Enregistrer les modifications' }}</span>
+            <span *ngIf="loading()">⏳ Enregistrement...</span>
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </ng-container>
+
+</div>

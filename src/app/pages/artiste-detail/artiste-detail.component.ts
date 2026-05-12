@@ -7,6 +7,6 @@ import { EvenementService } from '../../services/evenement.service';
 export class ArtisteDetailComponent {
   ar = inject(ArtisteService);
   ev = inject(EvenementService);
-  getArtistEvents(id:number){ return this.ev.evenements().filter(e=>e.artistes?.some(a=>a.idArtiste===id)); }
+  getArtistEvents(id?:number){ if (!id) return []; return this.ev.evenements().filter(e=>e.artistes?.some(a=>a.idArtiste===id)); }
   formatDate(d:string){return new Date(d).toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'});}
 }

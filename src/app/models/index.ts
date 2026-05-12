@@ -1,59 +1,131 @@
+// ────────────────────────────────────────────────────────────────
+// Interfaces du projet EventHub
+// ────────────────────────────────────────────────────────────────
+
+// ─── Classe mère Personne ───────────────────────────────────────
+
 export interface Personne {
-  id: number;
+  idPersonne?: number;
   nom: string;
   prenom: string;
-  username: string;
+  email: string;
+  password?: string;
+}
+
+// ─── Organisateur d'événement ───────────────────────────────────
+
+export interface Organisateur extends Personne {
+
+  nomStructure: string;
+  numeroSiret?: string;
+  adresseSiege?: string;
   role?: string;
 }
+
+// ─── Utilisateur classique ──────────────────────────────────────
+
 export interface Utilisateur extends Personne {
-  role: 'UTILISATEUR';
-  nbreTicket: number;
-  tickets?: Ticket[];
+
+  dateInscription?: string;
+  role?: string;
 }
-export interface Organisateur extends Personne {
-  role: 'ORGANISATEUR';
-  evenements?: Evenement[];
-}
-export interface Admin extends Personne {
-  role: 'ADMIN';
-}
-export type AnyUser = Utilisateur | Organisateur | Admin;
+
+// ─── Artiste participant aux événements ─────────────────────────
 
 export interface Artiste {
-  idArtiste: number;
+  // Identifiant artiste
+  idArtiste?: number;
   nom: string;
   prenom: string;
-  styleArtistique: string;
-  evenements?: Evenement[];
+  styleArtistique?: string;
+  nationalite?: string;
+  description?: string;
+  popularite?: number;
+  siteWeb?: string;
+  dateNaissance?: string;
   imageUrl?: string;
 }
+
+// ─── Événement principal ────────────────────────────────────────
+
 export interface Evenement {
-  id: number;
+  // Identifiants 
+  id?: number;
+  idEvenement?: number;
   nom: string;
   date: string;
-  prix: number;
-  lieu?: string;
   heure?: string;
-  description?: string;
+  genre?: string;
   categorie?: string;
+  lieu: string;
   capacite?: number;
-  nbTicketsVendus?: number;
+  popularite?: number;
+  description?: string;
   imageUrl?: string;
-  organisateur?: Organisateur;
+  prix?: number;
+  nbTicketsVendus?: number;
+  organisateur?: Organisateur | null;
   artistes?: Artiste[];
   tickets?: Ticket[];
 }
+
+// ─── Ticket de réservation ──────────────────────────────────────
+
 export interface Ticket {
-  idTicket: number;
-  numeroTicket: number;
-  statut?: 'VALIDE' | 'UTILISE' | 'ANNULE';
+  // Identifiant ticket
+  idTicket?: number;
+  numeroPlace?: string;
+  numeroTicket?: string;
+  statut?: "ACHETE" | "ANNULE" | "REMBOURSE" | "UTILISE";
+  prixUnitaire?: number;
+  dateAchat?: string;
+  dateAnnulation?: string;
+  dateRemboursement?: string;
   evenement?: Evenement;
   utilisateur?: Utilisateur;
 }
-export interface LoginRequest { username: string; password: string; }
-export interface RegisterRequest {
-  nom: string; prenom: string; username: string; password: string;
-  role: 'UTILISATEUR' | 'ORGANISATEUR';
+
+// ─── Type utilisateur global ────────────────────────────────────
+
+export type AnyUser = (Utilisateur | Organisateur) & {
+  role?: string;
+  idPersonne?: number;
+};
+
+// ─── Catégories UI ──────────────────────────────────────────────
+
+export interface Category {
+  // Identifiant catégorie
+  id: string;
+  label: string;
+  icon: string;
 }
-export interface AuthResponse { token: string; user: AnyUser; }
-export interface Category { id: string; label: string; icon: string; }
+
+// ─── Réponse authentification ───────────────────────────────────
+
+export interface AuthResponse {
+  // JWT token
+  token: string;
+  user: AnyUser;
+}
+
+// ─── Requête login ──────────────────────────────────────────────
+
+export interface LoginRequest {
+  
+  username: string;
+  password: string;
+}
+
+// ─── Requête inscription ────────────────────────────────────────
+
+export interface RegisterRequest {
+
+  nom: string;
+  prenom: string;
+  username: string;
+  password: string;
+
+  // Type de compte
+  role: "UTILISATEUR" | "ORGANISATEUR";
+}

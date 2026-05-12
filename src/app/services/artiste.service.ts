@@ -11,7 +11,7 @@ export class ArtisteService {
 
   loadAll(): Observable<Artiste[]> {
     return this.api.get<Artiste[]>('artistes').pipe(
-      tap(data => this._artistes.set(data))
+      tap(data => this._artistes.set(data ?? []))
     );
   }
 
@@ -20,14 +20,35 @@ export class ArtisteService {
   }
 
   create(a: Partial<Artiste>): Observable<Artiste> {
-    return this.api.post<Artiste>('artistes', a).pipe(
+    // Envoie les champs réels JPA uniquement
+    const payload = {
+      nom:             a.nom,
+      prenom:          a.prenom,
+      styleArtistique: a.styleArtistique,
+      nationalite:     a.nationalite,
+      description:     a.description,
+      popularite:      a.popularite,
+      dateNaissance:   a.dateNaissance,
+      siteWeb:         a.siteWeb,
+    };
+    return this.api.post<Artiste>('artistes', payload).pipe(
       tap(created => this._artistes.update(list => [...list, created]))
     );
   }
 
   update(id: number, a: Partial<Artiste>): Observable<Artiste> {
-    return this.api.put<Artiste>(`artistes/${id}`, a).pipe(
-      tap(updated => this._artistes.update(list => list.map(x => x.idArtiste === id ? updated : x)))
+    const payload = {
+      nom:             a.nom,
+      prenom:          a.prenom,
+      styleArtistique: a.styleArtistique,
+      nationalite:     a.nationalite,
+      description:     a.description,
+      popularite:      a.popularite,
+    };
+    return this.api.put<Artiste>(`artistes/${id}`, payload).pipe(
+      tap(updated => this._artistes.update(list =>
+        list.map(x => x.idArtiste === id ? { ...x, ...updated } : x)
+      ))
     );
   }
 
@@ -41,14 +62,18 @@ export class ArtisteService {
     return this.api.get<Artiste[]>(`artistes/by-style/${style}`);
   }
 
+  getByNationalite(nationalite: string): Observable<Artiste[]> {
+    return this.api.get<Artiste[]>(`artistes/by-nationalite/${nationalite}`);
+  }
+
   loadMock() {
     this._artistes.set([
-      { idArtiste:1, nom:'Eclipse',    prenom:'Luna',      styleArtistique:'Techno / Électronique', imageUrl:'assets/images/artistes/electronique.jpg' },
-      { idArtiste:2, nom:'Nexus',      prenom:'DJ',        styleArtistique:'House / Techno',         imageUrl:'assets/images/artistes/house.jpg' },
-      { idArtiste:3, nom:'Jazz',       prenom:'Marcus',    styleArtistique:'Jazz / Blues',           imageUrl:'assets/images/artistes/jazz.jpg' },
-      { idArtiste:4, nom:'Voltage',    prenom:'The',       styleArtistique:'Rock',                   imageUrl:'assets/images/artistes/rock.jpeg' },
-      { idArtiste:5, nom:'Symphonique',prenom:'Orchestre', styleArtistique:'Classique',              imageUrl:'assets/images/artistes/classique.jpg' },
-      { idArtiste:6, nom:'Flow',       prenom:'MC',        styleArtistique:'Hip-Hop / Rap',          imageUrl:'assets/images/artistes/hiphop.jpg' },
+      { idArtiste:1, nom:'Eclipse',    prenom:'Luna',      styleArtistique:'Techno', nationalite:'Française', imageUrl:'assets/images/artistes/luna-eclipse.jpg' },
+      { idArtiste:2, nom:'Nexus',      prenom:'DJ',        styleArtistique:'House',  nationalite:'Belge',     imageUrl:'assets/images/artistes/dj-nexus.jpg' },
+      { idArtiste:3, nom:'Jazz',       prenom:'Marcus',    styleArtistique:'Jazz',   nationalite:'Américaine',imageUrl:'assets/images/artistes/marcus-jazz.jpg' },
+      { idArtiste:4, nom:'Voltage',    prenom:'The',       styleArtistique:'Rock',   nationalite:'Britannique',imageUrl:'assets/images/artistes/the-voltage.jpg' },
+      { idArtiste:5, nom:'Symphonique',prenom:'Orchestre', styleArtistique:'Classique',nationalite:'Française',imageUrl:'assets/images/artistes/orchestre.jpg' },
+      { idArtiste:6, nom:'Flow',       prenom:'MC',        styleArtistique:'Hip-Hop',nationalite:'Française', imageUrl:'assets/images/artistes/mc-flow.jpg' },
     ]);
   }
 }

@@ -1,0 +1,438 @@
+// ── Variables ─────────────────────────────────────────────────────
+$red:      #C82909;
+$pink:     #FCC6BB;
+$beige:    #E7DED9;
+$dark:     #2D211C;
+$white:    #FFFFFF;
+$gray:     #666666;
+$light:    #FFF8F7;
+$border:   #E8E0DC;
+$radius:   12px;
+$shadow:   0 2px 12px rgba(44,33,28,.08);
+
+// ── Layout ────────────────────────────────────────────────────────
+.artistes-admin {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px 24px;
+  font-family: 'Segoe UI', sans-serif;
+  color: $dark;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    h1 { font-size: 1.8rem; font-weight: 700; margin: 0; }
+  }
+
+  .count-badge {
+    background: $pink;
+    color: $dark;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+}
+
+// ── Boutons ───────────────────────────────────────────────────────
+.btn-primary {
+  background: $red;
+  color: $white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .2s;
+  &:hover { background: darken($red, 8%); transform: translateY(-1px); }
+  &:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+}
+
+.btn-secondary {
+  background: $beige;
+  color: $dark;
+  border: 1px solid $border;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all .2s;
+  &:hover { background: darken($beige, 5%); }
+}
+
+.btn-danger {
+  background: #c0392b;
+  color: $white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  &:hover { background: darken(#c0392b, 8%); }
+}
+
+.btn-back {
+  background: none;
+  border: 1px solid $border;
+  color: $gray;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  &:hover { color: $dark; border-color: $dark; }
+}
+
+.btn-edit {
+  background: $beige;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  &:hover { background: darken($beige, 8%); }
+}
+
+.btn-delete {
+  background: #fff0ee;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  &:hover { background: $pink; }
+}
+
+// ── Recherche ─────────────────────────────────────────────────────
+.search-bar {
+  margin-bottom: 20px;
+  input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1.5px solid $border;
+    border-radius: $radius;
+    font-size: 0.95rem;
+    background: $white;
+    color: $dark;
+    outline: none;
+    transition: border-color .2s;
+    box-sizing: border-box;
+    &:focus { border-color: $red; }
+  }
+}
+
+// ── Tableau ───────────────────────────────────────────────────────
+.table-wrapper {
+  background: $white;
+  border-radius: $radius;
+  box-shadow: $shadow;
+  overflow: hidden;
+  border: 1px solid $border;
+}
+
+.artistes-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  thead tr {
+    background: $dark;
+    th {
+      color: $white;
+      padding: 14px 16px;
+      text-align: left;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+  }
+
+  tbody tr {
+    border-bottom: 1px solid $border;
+    transition: background .15s;
+    &:last-child { border-bottom: none; }
+    &:hover { background: $light; }
+  }
+
+  td { padding: 14px 16px; font-size: 0.9rem; vertical-align: middle; }
+}
+
+.artiste-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  .avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: $white;
+    flex-shrink: 0;
+    background: $red;
+  }
+
+  strong { display: block; font-size: 0.95rem; }
+  small a { color: $red; font-size: 0.8rem; text-decoration: none; }
+}
+
+.style-badge {
+  background: $pink;
+  color: $dark;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.popularite-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 140px;
+
+  .bar-fill {
+    height: 6px;
+    border-radius: 3px;
+    transition: width .3s;
+    background: $red;
+  }
+
+  span { font-size: 0.8rem; font-weight: 600; }
+}
+
+.actions {
+  display: flex;
+  gap: 6px;
+  justify-content: flex-end;
+}
+
+.empty-state {
+  padding: 60px 20px;
+  text-align: center;
+  span { font-size: 3rem; display: block; margin-bottom: 12px; }
+  p { color: $gray; margin-bottom: 20px; }
+}
+
+// ── Modale confirmation ───────────────────────────────────────────
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.confirm-modal {
+  background: $white;
+  border-radius: $radius;
+  padding: 32px;
+  max-width: 400px;
+  width: 90%;
+  h3 { margin: 0 0 12px; }
+  p  { color: $gray; margin: 0 0 24px; }
+  .confirm-actions { display: flex; gap: 12px; justify-content: flex-end; }
+}
+
+// ── Formulaire ────────────────────────────────────────────────────
+.form-container {
+  background: $white;
+  border-radius: $radius;
+  box-shadow: $shadow;
+  border: 1px solid $border;
+  overflow: hidden;
+}
+
+.form-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 28px;
+  border-bottom: 2px solid $red;
+  background: $light;
+
+  h2 { margin: 0; font-size: 1.3rem; }
+}
+
+.artiste-form { padding: 0; }
+
+.form-section {
+  padding: 24px 28px;
+  border-bottom: 1px solid $border;
+
+  &:last-child { border-bottom: none; }
+
+  h3 {
+    margin: 0 0 20px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: $red;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+  }
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+  &:last-child { margin-bottom: 0; }
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  &.full-width { grid-column: 1 / -1; }
+
+  label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: $dark;
+    .required { color: $red; }
+  }
+
+  input, select, textarea {
+    padding: 10px 14px;
+    border: 1.5px solid $border;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    color: $dark;
+    background: $white;
+    outline: none;
+    transition: border-color .2s;
+    font-family: inherit;
+    &:focus { border-color: $red; }
+  }
+
+  textarea { resize: vertical; min-height: 100px; }
+  small { color: $gray; font-size: 0.8rem; text-align: right; }
+}
+
+// ── Slider popularité ─────────────────────────────────────────────
+.slider-container {
+  position: relative;
+  margin: 8px 0 4px;
+
+  input[type="range"] {
+    width: 100%;
+    height: 6px;
+    -webkit-appearance: none;
+    background: transparent;
+    position: relative;
+    z-index: 2;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+
+    &::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: $red;
+      border: 2px solid $white;
+      box-shadow: 0 2px 6px rgba(200,41,9,.3);
+      cursor: pointer;
+    }
+
+    &::-webkit-slider-runnable-track {
+      height: 6px;
+      background: $beige;
+      border-radius: 3px;
+    }
+  }
+}
+
+.popularite-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+  span { font-size: 0.75rem; color: $gray; }
+}
+
+// ── Aperçu ────────────────────────────────────────────────────────
+.preview-section { background: $light; }
+
+.artiste-preview-card {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  background: $white;
+  border-radius: $radius;
+  border: 1px solid $border;
+
+  .preview-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: $red;
+    color: $white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .preview-info {
+    flex: 1;
+    h4 { margin: 0 0 4px; font-size: 1.1rem; }
+    .preview-style { color: $red; font-weight: 600; font-size: 0.9rem; margin: 0 0 4px; }
+    .preview-nationalite { color: $gray; font-size: 0.85rem; margin: 0 0 8px; }
+    .preview-desc { color: $gray; font-size: 0.85rem; font-style: italic; margin: 8px 0 0; }
+  }
+
+  .preview-pop {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    .mini-bar {
+      flex: 1;
+      height: 6px;
+      background: $beige;
+      border-radius: 3px;
+      overflow: hidden;
+      div { height: 100%; border-radius: 3px; transition: width .3s; }
+    }
+    span { font-size: 0.8rem; color: $gray; white-space: nowrap; }
+  }
+}
+
+// ── Actions du formulaire ─────────────────────────────────────────
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 20px 28px;
+  background: $light;
+  border-top: 1px solid $border;
+}
+
+// ── Responsive ────────────────────────────────────────────────────
+@media (max-width: 768px) {
+  .artistes-admin { padding: 20px 16px; }
+  .page-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .form-row { grid-template-columns: 1fr; }
+  .artiste-preview-card { flex-direction: column; }
+  .artistes-table { display: block; overflow-x: auto; }
+}

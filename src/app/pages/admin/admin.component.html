@@ -70,22 +70,30 @@
     }
 
     <!-- ARTISTES TAB -->
-    @if(tab()==='artistes'){
-      <div class="admin-section">
-        <h2>Artistes ({{ar.artistes().length}})</h2>
-        <div class="artistes-admin-grid">
-          @for(a of ar.artistes(); track a.idArtiste){
-            <div class="artiste-admin-card">
-              <img [src]="a.imageUrl" [alt]="a.nom"/>
-              <div>
-                <strong>{{a.prenom}} {{a.nom}}</strong>
-                <span>{{a.styleArtistique}}</span>
-              </div>
-            </div>
-          }
+@if(tab()==='artistes'){
+  <div class="admin-section">
+    <div class="admin-section__head">
+      <h2>Artistes ({{ ar.artistes().length }})</h2>
+
+      <a routerLink="/admin/artistes/new" class="admin-btn-primary">
+        + Ajouter un artiste
+      </a>
+    </div>
+
+    <div class="artistes-admin-grid">
+      @for(a of ar.artistes(); track a.idArtiste){
+        <div class="artiste-admin-card">
+          <img [src]="a.imageUrl || 'assets/images/default-artist.png'" [alt]="a.nom"/>
+
+          <div>
+            <strong>{{ a.prenom }} {{ a.nom }}</strong>
+            <span>{{ a.styleArtistique || 'Style non défini' }}</span>
+          </div>
         </div>
-      </div>
-    }
+      }
+    </div>
+  </div>
+}
 
     <!-- USERS TAB -->
     @if(tab()==='users'){
@@ -94,17 +102,17 @@
         <div class="admin-users">
           <div class="admin-user-row">
             <div class="admin-user-avatar" style="background:#52b788">A</div>
-            <div><strong>Admin System</strong><span>admin · ADMIN</span></div>
+            <div><strong>Admin System</strong><span>admin&#64;gmail.com · ADMIN</span></div>
             <span class="admin-user-role admin-user-role--admin">ADMIN</span>
           </div>
           <div class="admin-user-row">
             <div class="admin-user-avatar" style="background:var(--red)">S</div>
-            <div><strong>Sophie Martin</strong><span>sophie · 2 tickets</span></div>
+            <div><strong>Mamy mendes </strong><span>mamy.mendes&#64;gmail.com · 2 tickets</span></div>
             <span class="admin-user-role admin-user-role--user">UTILISATEUR</span>
           </div>
           <div class="admin-user-row">
             <div class="admin-user-avatar" style="background:#2D211C">J</div>
-            <div><strong>Jean Dupont</strong><span>jean · Organisateur</span></div>
+            <div><strong>Ines Noubisi</strong><span>ines.noubisi&#64;gmail.com · Organisateur</span></div>
             <span class="admin-user-role admin-user-role--org">ORGANISATEUR</span>
           </div>
         </div>
