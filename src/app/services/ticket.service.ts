@@ -4,7 +4,7 @@ import { Observable, tap, forkJoin } from "rxjs";
 import { Ticket, Evenement } from "../models";
 import { ApiService } from "./api.service";
 import { AuthService } from "./auth.service";
-
+import jsPDF from "jspdf";
 @Injectable({ providedIn: "root" })
 export class TicketService {
   // Services nécessaires aux appels API et à l'utilisateur connecté
@@ -139,6 +139,71 @@ export class TicketService {
     );
   }
 
+  /**
+   * Génère et télécharge le ticket en PDF.
+   */
+  /**
+   * Génère et télécharge un ticket PDF.
+   */
+  downloadTicketPdf(ticket: Ticket) {
+    const user = this.auth.user();
+    const event = ticket.evenement;
+
+    const doc = new jsPDF();
+
+    // Header
+    doc.setFontSize(22);
+    doc.text("EVENTHUB", 20, 20);
+
+    doc.setFontSize(16);
+    doc.text("Billet électronique", 20, 32);
+
+    // Infos ticket
+    doc.setFontSize(12);
+
+    doc.text(`Référence : TKT-${ticket.idTicket}`, 20, 50);
+
+    doc.text(
+      `Place : ${ticket.numeroPlace ?? ticket.numeroTicket ?? "N/A"}`,
+      20,
+      60,
+    );
+
+    doc.text(`Statut : ${ticket.statut}`, 20, 70);
+
+    doc.text(`Prix : ${ticket.prixUnitaire ?? event?.prix ?? 0} €`, 20, 80);
+
+    // Infos événement
+    doc.setFontSize(14);
+    doc.text("Événement", 20, 100);
+
+    doc.setFontSize(12);
+
+    doc.text(`Nom : ${event?.nom ?? ""}`, 20, 112);
+
+    doc.text(`Date : ${event?.date ?? ""}`, 20, 122);
+
+    doc.text(`Heure : ${event?.heure ?? ""}`, 20, 132);
+
+    doc.text(`Lieu : ${event?.lieu ?? ""}`, 20, 142);
+
+    // Infos utilisateur
+    doc.setFontSize(14);
+    doc.text("Participant", 20, 162);
+
+    doc.setFontSize(12);
+
+    doc.text(`${user?.prenom ?? ""} ${user?.nom ?? ""}`, 20, 174);
+
+    doc.text(`${user?.email ?? ""}`, 20, 184);
+
+    // Footer
+    doc.setFontSize(10);
+
+    doc.text("Merci pour votre réservation sur EventHub.", 20, 260);
+
+    doc.save(`ticket-${ticket.idTicket}.pdf`);
+  }
   /**
    * Données locales utilisées uniquement si besoin de test sans backend.
    */

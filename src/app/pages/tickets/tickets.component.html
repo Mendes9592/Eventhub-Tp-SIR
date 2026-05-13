@@ -57,7 +57,7 @@
                   <rect x="64" y="40" width="8" height="8" fill="currentColor"/>
                 </svg>
                 <div class="ticket-item__btns">
-                  <button class="ticket-item__btn ticket-item__btn--dl" type="button">⬇ PDF</button>
+                  <button class="ticket-item__btn ticket-item__btn--dl" type="button" (click)="tk.downloadTicketPdf(t)"> ⬇ PDF </button>
                   <button class="ticket-item__btn ticket-item__btn--cancel" (click)="askCancel(t.idTicket)" type="button">✕ Annuler</button>
                 </div>
               </div>
