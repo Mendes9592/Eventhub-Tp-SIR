@@ -44,14 +44,23 @@ export class TicketService {
    * Crée un ou plusieurs tickets pour l'événement sélectionné.
    * Le backend attend les IDs de l'événement et de l'utilisateur.
    */
+  /**
+   * Crée un ou plusieurs tickets pour l'événement sélectionné.
+   * Le backend attend les IDs de l'événement et de l'utilisateur.
+   */
   acheterTicket(
     evenement: Evenement,
     quantite: number = 1,
   ): Observable<Ticket[]> {
     const user = this.auth.user();
+    const eventId = evenement.idEvenement ?? evenement.id;
 
     if (!user?.idPersonne) {
       throw new Error("Utilisateur non connecté");
+    }
+
+    if (!eventId) {
+      throw new Error("Événement introuvable");
     }
 
     const requests: Observable<Ticket>[] = [];
@@ -64,7 +73,7 @@ export class TicketService {
         dateAchat: new Date().toISOString().slice(0, 19),
 
         evenement: {
-          idEvenement: evenement.idEvenement ?? evenement.id,
+          idEvenement: eventId,
         },
 
         utilisateur: {

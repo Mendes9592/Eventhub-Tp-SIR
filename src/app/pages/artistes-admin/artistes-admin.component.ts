@@ -26,8 +26,8 @@ export class ArtistesAdminComponent implements OnInit {
   form = this.emptyForm();
 
   // Styles pour le select
-  readonly styles = ['Techno', 'House', 'Jazz', 'Rock', 'Classique', 'Hip-Hop', 'Pop', 'Blues', 'Reggae', 'Metal', 'Electro', 'Soul', 'R&B', 'Folk', 'Autre'];
-  readonly nationalites = ['Française', 'Américaine', 'Britannique', 'Belge', 'Allemande', 'Espagnole', 'Italienne', 'Canadienne', 'Brésilienne', 'Japonaise', 'Autre'];
+  readonly styles = ['Techno', 'House', 'Jazz', 'Rock', 'Classique', 'Hip-Hop', 'Pop', 'Afro-Pop','Blues', 'Reggae', 'Metal', 'Electro', 'Soul', 'R&B', 'Folk', 'Autre'];
+  readonly nationalites = ['Française', 'Américaine', 'Britannique', 'Belge', 'Allemande', 'Espagnole', 'Italienne', 'Canadienne', 'Brésilienne', 'Japonaise', 'Sénégalaise', 'Autre'];
 
   emptyForm() {
     return {
@@ -99,6 +99,7 @@ export class ArtistesAdminComponent implements OnInit {
       popularite:      this.form.popularite || undefined,
       siteWeb:         this.form.siteWeb || undefined,
       dateNaissance:   this.form.dateNaissance || undefined,
+      imageUrl:        this.form.imageUrl || undefined,
     };
 
     if (this.editTarget()) {

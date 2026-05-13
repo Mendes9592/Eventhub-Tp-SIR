@@ -61,4 +61,14 @@
   &__btn-sec{background:var(--beige);color:var(--dark);padding:12px 24px;border-radius:10px;font-weight:600;border:none;cursor:pointer;transition:all .2s;&:hover{background:var(--pink)}}
   &__btn-danger{background:var(--red);color:#fff;padding:12px 24px;border-radius:10px;font-weight:600;border:none;cursor:pointer;transition:all .2s;&:hover{background:var(--red-light)}}
 }
+.event-img-placeholder {
+  width: 56px;
+  height: 56px;
+  border-radius: 10px;
+  background: #f2e8e4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+}
 @keyframes slideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}

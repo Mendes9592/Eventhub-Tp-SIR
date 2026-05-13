@@ -1,135 +1,247 @@
 <div class="org-page">
   <div class="org-page__inner">
+
     <div class="org-page__header">
       <div>
         <h1>Espace Organisateur</h1>
-        <p>Bienvenue, {{auth.user()?.prenom}} {{auth.user()?.nom}}</p>
+        <p>Bienvenue, {{ auth.user()?.prenom }} {{ auth.user()?.nom }}</p>
       </div>
-      @if(tab()==='list'){
-        <button class="org-btn-primary" (click)="startCreate()" type="button">+ Créer un événement</button>
+
+      @if(tab() === 'list') {
+        <button class="org-btn-primary" (click)="startCreate()" type="button">
+          + Créer un événement
+        </button>
       }
     </div>
 
-    <!-- Confirm delete dialog -->
-    @if(deleteConfirm() !== null){
+    @if(deleteConfirm() !== null) {
       <div class="dialog-bd">
         <div class="dialog">
           <span>⚠️</span>
           <h3>Supprimer cet événement ?</h3>
           <p>Tous les tickets associés seront affectés. Action irréversible.</p>
+
           <div class="dialog__actions">
-            <button class="dialog__btn-sec" (click)="deleteConfirm.set(null)" type="button">Annuler</button>
-            <button class="dialog__btn-danger" (click)="confirmDelete()" type="button">Supprimer</button>
+            <button class="dialog__btn-sec" (click)="deleteConfirm.set(null)" type="button">
+              Annuler
+            </button>
+            <button class="dialog__btn-danger" (click)="confirmDelete()" type="button">
+              Supprimer
+            </button>
           </div>
         </div>
       </div>
     }
 
-    <!-- TABS -->
     <div class="org-tabs">
-      <button [class.active]="tab()==='list'" (click)="tab.set('list')" type="button">📋 Mes événements</button>
-      <button [class.active]="tab()==='create'||tab()==='edit'" (click)="startCreate()" type="button">➕ {{tab()==='edit'?'Modifier':'Créer'}}</button>
+      <button [class.active]="tab() === 'list'" (click)="tab.set('list')" type="button">
+        📋 Mes événements
+      </button>
+
+      <button [class.active]="tab() === 'create' || tab() === 'edit'" (click)="startCreate()" type="button">
+        ➕ {{ tab() === 'edit' ? 'Modifier' : 'Créer' }}
+      </button>
     </div>
 
-    <!-- LIST TAB -->
-    @if(tab()==='list'){
+    @if(tab() === 'list') {
       <div class="org-stats-row">
-        <div class="org-stat"><span class="org-stat__val">{{myEvents.length}}</span><span class="org-stat__lbl">Événements</span></div>
-        <div class="org-stat"><span class="org-stat__val">{{ev.totalTickets()|number}}</span><span class="org-stat__lbl">Tickets vendus</span></div>
-        <div class="org-stat"><span class="org-stat__val">{{myEvents.length*2}}</span><span class="org-stat__lbl">Artistes associés</span></div>
+        <div class="org-stat">
+          <span class="org-stat__val">{{ myEvents.length }}</span>
+          <span class="org-stat__lbl">Événements</span>
+        </div>
+
+        <div class="org-stat">
+          <span class="org-stat__val">{{ ev.totalTickets() | number }}</span>
+          <span class="org-stat__lbl">Tickets vendus</span>
+        </div>
+
+        <div class="org-stat">
+          <span class="org-stat__val">
+            {{ myEvents.length }}
+          </span>
+          <span class="org-stat__lbl">Événements publiés</span>
+        </div>
       </div>
+
       <div class="org-events-table">
         <div class="org-table-head">
-          <span>Événement</span><span>Date</span><span>Lieu</span><span>Tickets</span><span>Prix</span><span>Actions</span>
+          <span>Événement</span>
+          <span>Date</span>
+          <span>Lieu</span>
+          <span>Tickets</span>
+          <span>Prix</span>
+          <span>Actions</span>
         </div>
-        @for(e of myEvents; track e.id){
+
+        @for(e of myEvents; track e.idEvenement) {
           <div class="org-table-row">
+
             <div class="org-table-row__name">
-              <img [src]="e.imageUrl" [alt]="e.nom"/>
+              <img
+                *ngIf="e.imageUrl; else eventPlaceholder"
+                [src]="e.imageUrl"
+                [alt]="e.nom"
+              />
+
+              <ng-template #eventPlaceholder>
+                <div class="event-img-placeholder">🎵</div>
+              </ng-template>
+
               <div>
-                <strong>{{e.nom}}</strong>
-                <span>{{ev.getCategoryLabel(e.categorie??'')}}</span>
+                <strong>{{ e.nom }}</strong>
+                <span>{{ ev.getCategoryLabel(e.categorie ?? '') }}</span>
+
+                @if(e.artistes?.length) {
+                  <small>
+                    Artistes :
+                    @for(a of e.artistes; track a.idArtiste) {
+                      {{ a.prenom }} {{ a.nom }}@if(!$last){, }
+                    }
+                  </small>
+                }
               </div>
             </div>
-            <span class="org-table-row__date">{{formatDate(e.date)}}</span>
-            <span>{{e.lieu}}</span>
+
+            <span class="org-table-row__date">{{ formatDate(e.date) }}</span>
+            <span>{{ e.lieu }}</span>
+
             <div class="org-table-row__tickets">
-              <div class="mini-bar"><div class="mini-bar__fill" [style.width.%]="ev.getOccupancyPercent(e)"></div></div>
-              <span>{{e.nbTicketsVendus|number}}/{{e.capacite|number}}</span>
+              <div class="mini-bar">
+                <div class="mini-bar__fill" [style.width.%]="ev.getOccupancyPercent(e)"></div>
+              </div>
+              <span>{{ e.nbTicketsVendus | number }}/{{ e.capacite | number }}</span>
             </div>
-            <span><strong>{{e.prix}}€</strong></span>
+
+            <span><strong>{{ e.prix }}€</strong></span>
+
             <div class="org-table-row__actions">
               <button class="org-btn-edit" (click)="startEdit(e)" type="button">✏️</button>
-              <a [routerLink]="['/evenement', e.id]" class="org-btn-view">👁</a>
-              <button class="org-btn-delete" (click)="askDelete(e.id)" type="button">🗑</button>
+              <a [routerLink]="['/evenement', e.idEvenement]" class="org-btn-view">👁</a>
+              <button class="org-btn-delete" (click)="askDelete(e.idEvenement)" type="button">🗑</button>
             </div>
           </div>
         }
       </div>
     }
 
-    <!-- CREATE/EDIT TAB -->
-    @if(tab()==='create'||tab()==='edit'){
+    @if(tab() === 'create' || tab() === 'edit') {
       <div class="org-form-wrap">
         <div class="org-card">
-          <h2>{{tab()==='edit'?'Modifier l\'événement':'Nouvel événement'}}</h2>
+          <h2>{{ tab() === 'edit' ? 'Modifier l\'événement' : 'Nouvel événement' }}</h2>
+
           <form (ngSubmit)="submit()" class="org-form">
+
             <div class="org-form__group">
               <label>Nom de l'événement *</label>
-              <input type="text" [(ngModel)]="form.nom" name="nom" placeholder="Ex: Festival d'été 2026" required/>
+              <input
+                type="text"
+                [(ngModel)]="form.nom"
+                name="nom"
+                placeholder="Ex: Festival d'été 2026"
+                required
+              />
             </div>
+
             <div class="org-form__row">
               <div class="org-form__group">
                 <label>Date *</label>
-                <input type="date" [(ngModel)]="form.date" name="date" required/>
+                <input type="date" [(ngModel)]="form.date" name="date" required />
               </div>
+
               <div class="org-form__group">
                 <label>Heure</label>
-                <input type="time" [(ngModel)]="form.heure" name="heure"/>
+                <input type="time" [(ngModel)]="form.heure" name="heure" />
               </div>
             </div>
+
             <div class="org-form__group">
               <label>Lieu *</label>
-              <input type="text" [(ngModel)]="form.lieu" name="lieu" placeholder="Ex: Zénith de Paris" required/>
+              <input
+                type="text"
+                [(ngModel)]="form.lieu"
+                name="lieu"
+                placeholder="Ex: Zénith de Paris"
+                required
+              />
             </div>
+
             <div class="org-form__row">
               <div class="org-form__group">
                 <label>Catégorie</label>
                 <select [(ngModel)]="form.categorie" name="categorie">
-                  @for(cat of ev.categories.slice(1); track cat.id){
-                    <option [value]="cat.id">{{cat.icon}} {{cat.label}}</option>
+                  @for(cat of ev.categories.slice(1); track cat.id) {
+                    <option [value]="cat.id">
+                      {{ cat.icon }} {{ cat.label }}
+                    </option>
                   }
                 </select>
               </div>
+
               <div class="org-form__group">
                 <label>Prix (€) *</label>
-                <input type="number" [(ngModel)]="form.prix" name="prix" min="1"/>
+                <input type="number" [(ngModel)]="form.prix" name="prix" min="1" />
               </div>
             </div>
+
             <div class="org-form__group">
-              <label>Capacité (places)</label>
-              <input type="number" [(ngModel)]="form.capacite" name="capacite" min="1"/>
+              <label>Artistes associés</label>
+
+              <select multiple [(ngModel)]="form.artistes" name="artistes">
+                @for(a of ar.artistes(); track a.idArtiste) {
+                  <option [ngValue]="a.idArtiste">
+                    {{ a.prenom }} {{ a.nom }} — {{ a.styleArtistique }}
+                  </option>
+                }
+              </select>
+
+              <small>Maintiens Ctrl pour sélectionner plusieurs artistes.</small>
             </div>
+
+            <div class="org-form__group">
+              <label>Capacité</label>
+              <input type="number" [(ngModel)]="form.capacite" name="capacite" min="1" />
+            </div>
+
             <div class="org-form__group">
               <label>Image URL</label>
-              <input type="url" [(ngModel)]="form.imageUrl" name="imageUrl" placeholder="https://..."/>
+              <input
+                type="text"
+                [(ngModel)]="form.imageUrl"
+                name="imageUrl"
+                placeholder="ex: assets/images/events/rock.jpeg"
+              />
             </div>
-            <div class="org-form__group">
-              <label>Description</label>
-              <textarea [(ngModel)]="form.description" name="description" rows="4" placeholder="Décrivez votre événement..."></textarea>
-            </div>
-            @if(form.imageUrl){
+
+            @if(form.imageUrl) {
               <div class="org-form__preview">
-                <img [src]="form.imageUrl" alt="Aperçu"/>
+                <img [src]="form.imageUrl" alt="Aperçu" />
               </div>
             }
-            <div class="org-form__actions">
-              <button type="button" class="org-btn-secondary" (click)="tab.set('list')">Annuler</button>
-              <button type="submit" class="org-btn-primary">{{tab()==='edit'?'Enregistrer les modifications':'Publier l\'événement →'}}</button>
+
+            <div class="org-form__group">
+              <label>Description</label>
+              <textarea
+                [(ngModel)]="form.description"
+                name="description"
+                rows="4"
+                placeholder="Décrivez votre événement..."
+              ></textarea>
             </div>
+
+            <div class="org-form__actions">
+              <button type="button" class="org-btn-secondary" (click)="tab.set('list')">
+                Annuler
+              </button>
+
+              <button type="submit" class="org-btn-primary" [disabled]="loading()">
+                {{ tab() === 'edit' ? 'Enregistrer les modifications' : 'Publier l\'événement →' }}
+              </button>
+            </div>
+
           </form>
         </div>
       </div>
     }
+
   </div>
 </div>

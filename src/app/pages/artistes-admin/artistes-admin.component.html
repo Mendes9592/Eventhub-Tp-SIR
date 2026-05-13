@@ -39,8 +39,9 @@
         <tbody>
           <tr *ngFor="let a of filteredArtistes">
             <td class="artiste-info">
-              <div class="avatar" [style.background]="avatarColor(a.idArtiste)">
-                {{ a.prenom[0] }}{{ a.nom[0] }}
+              <div class="avatar" [style.background]="!a.imageUrl ? avatarColor(a.idArtiste) : 'transparent'">
+                <img *ngIf="a.imageUrl; else avatarInitials" [src]="a.imageUrl" [alt]="a.prenom + ' ' + a.nom" />
+                <ng-template #avatarInitials> {{ a.prenom[0] }}{{ a.nom[0] }} </ng-template>
               </div>
               <div>
                 <strong>{{ a.prenom }} {{ a.nom }}</strong>
@@ -142,6 +143,11 @@
               <label>Site web</label>
               <input type="url" [(ngModel)]="form.siteWeb" name="siteWeb" placeholder="https://..." />
             </div>
+            <div class="form-group full-width">
+              <label>Image de l'artiste</label>
+              <input type="text" [(ngModel)]="form.imageUrl" name="imageUrl" placeholder="ex: assets/images/artists/abel-tesfaye.jpg"/>
+              <small>Colle ici le chemin ou l'URL de l'image de l'artiste.</small>
+            </div>
           </div>
 
           <!-- Popularité slider -->
@@ -192,7 +198,10 @@
         <section class="form-section preview-section" *ngIf="form.nom || form.prenom">
           <h3>👁 Aperçu de la fiche</h3>
           <div class="artiste-preview-card">
-            <div class="preview-avatar">{{ form.prenom.charAt(0) || '?' }}{{ form.nom.charAt(0) || '?' }}</div>
+            <div class="preview-avatar">
+             <img *ngIf="form.imageUrl; else initials" [src]="form.imageUrl" [alt]="form.prenom + ' ' + form.nom"/>
+             <ng-template #initials> {{ form.prenom.charAt(0) || '?' }}{{ form.nom.charAt(0) || '?' }} </ng-template>
+           </div>
             <div class="preview-info">
               <h4>{{ form.prenom }} {{ form.nom }}</h4>
               <p class="preview-style">{{ form.styleArtistique || 'Style non défini' }}</p>
