@@ -1,0 +1,43 @@
+<div class="control-page">
+  <h1>Contrôle des tickets</h1>
+
+  <div class="control-box">
+    <label>ID du ticket</label>
+
+    <input
+      type="number"
+      [(ngModel)]="ticketId"
+      placeholder="Ex: 3"
+    />
+
+    <button type="button" (click)="verifier()">
+      Vérifier
+    </button>
+  </div>
+
+  <div class="success" *ngIf="message()">
+    {{ message() }}
+  </div>
+
+  <div class="error" *ngIf="error()">
+    {{ error() }}
+  </div>
+
+  <div class="ticket-card" *ngIf="ticket() as t">
+    <h2>{{ t.evenement?.nom }}</h2>
+
+    <p><strong>Référence :</strong> TKT-{{ t.idTicket }}</p>
+    <p><strong>Place :</strong> {{ t.numeroPlace }}</p>
+    <p><strong>Statut :</strong> {{ t.statut }}</p>
+    <p><strong>Date :</strong> {{ t.evenement?.date }}</p>
+    <p><strong>Lieu :</strong> {{ t.evenement?.lieu }}</p>
+
+    <button
+      type="button"
+      (click)="valider()"
+      *ngIf="t.statut === 'ACHETE'"
+    >
+      Valider l’entrée
+    </button>
+  </div>
+</div>

@@ -34,29 +34,24 @@
                 <span class="ticket-item__status ticket-item__status--valid">✓ Valide</span>
               </div>
               <div class="ticket-item__content">
+                
                 <span class="ticket-item__cat">{{ t.evenement?.categorie }}</span>
                 <h3>{{ t.evenement?.nom }}</h3>
                 <div class="ticket-item__info">
                   <span>📅 {{ formatDate(t.evenement!.date) }} · {{ t.evenement?.heure }}</span>
                   <span>📍 {{ t.evenement?.lieu }}</span>
-                  <span>🎫 N° {{ t.numeroTicket }}</span>
+                  <span>🎫 N° {{ t.numeroPlace || t.numeroTicket }}</span>
                 </div>
                 <div class="ticket-item__ref">Réf : TKT-{{ t.idTicket }}</div>
               </div>
               <div class="ticket-item__aside">
                 <div class="ticket-item__price">{{ t.evenement?.prix }}€</div>
-                <svg class="ticket-item__qr" viewBox="0 0 80 80" width="60" height="60">
-                  <rect x="0" y="0" width="30" height="30" fill="none" stroke="currentColor" stroke-width="4"/>
-                  <rect x="10" y="10" width="10" height="10" fill="currentColor"/>
-                  <rect x="50" y="0" width="30" height="30" fill="none" stroke="currentColor" stroke-width="4"/>
-                  <rect x="60" y="10" width="10" height="10" fill="currentColor"/>
-                  <rect x="0" y="50" width="30" height="30" fill="none" stroke="currentColor" stroke-width="4"/>
-                  <rect x="10" y="60" width="10" height="10" fill="currentColor"/>
-                  <rect x="40" y="40" width="8" height="8" fill="currentColor"/>
-                  <rect x="52" y="40" width="8" height="8" fill="currentColor"/>
-                  <rect x="64" y="40" width="8" height="8" fill="currentColor"/>
-                </svg>
+                <img
+                  [src]="'https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=TKT-' + t.idTicket"
+                  alt="QR Code"
+                />
                 <div class="ticket-item__btns">
+                  
                   <button class="ticket-item__btn ticket-item__btn--dl" type="button" (click)="tk.downloadTicketPdf(t)"> ⬇ PDF </button>
                   <button class="ticket-item__btn ticket-item__btn--cancel" (click)="askCancel(t.idTicket)" type="button">✕ Annuler</button>
                 </div>
@@ -88,7 +83,7 @@
                 <div class="ticket-item__info">
                   <span>📅 {{ formatDate(t.evenement!.date) }}</span>
                   <span>📍 {{ t.evenement?.lieu }}</span>
-                  <span>🎫 N° {{ t.numeroTicket }}</span>
+                 <span>🎫 N° {{ t.numeroPlace || t.numeroTicket }}</span>
                 </div>
                 <div class="ticket-item__ref">Réf : TKT-{{ t.idTicket }}</div>
               </div>

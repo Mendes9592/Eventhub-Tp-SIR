@@ -10,7 +10,8 @@ export const routes: Routes = [
   { path: 'evenement/:id', loadComponent: () => import('./pages/event-detail/event-detail.component').then(m => m.EventDetailComponent) },
   { path: 'login', loadComponent: () => import('./pages/login/login.component').then(m => m.LoginComponent), canActivate: [guestGuard] },
   { path: 'register', loadComponent: () => import('./pages/register/register.component').then(m => m.RegisterComponent), canActivate: [guestGuard] },
-  {path: 'admin/artistes',loadComponent: () => import('./pages/artistes-admin/artistes-admin.component').then(m => m.ArtistesAdminComponent)},
-  {path: 'admin/artistes/new',loadComponent: () => import('./pages/artistes-admin/artistes-admin.component').then(m => m.ArtistesAdminComponent),canActivate: [adminGuard]},
+  { path: 'admin/artistes',loadComponent: () => import('./pages/artistes-admin/artistes-admin.component').then(m => m.ArtistesAdminComponent)},
+  { path: 'admin/artistes/new',loadComponent: () => import('./pages/artistes-admin/artistes-admin.component').then(m => m.ArtistesAdminComponent),canActivate: [adminGuard]},
+  { path: 'controle-ticket',loadComponent: () => import('./pages/ticket-control/ticket-control.component') .then(m => m.TicketControlComponent)},
   { path: '**', redirectTo: '' },
 ];

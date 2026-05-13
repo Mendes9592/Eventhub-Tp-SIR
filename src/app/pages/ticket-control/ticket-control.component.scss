@@ -1,0 +1,208 @@
+// ─────────────────────────────────────────────
+// Variables
+// ─────────────────────────────────────────────
+$red: #C82909;
+$pink: #FCC6BB;
+$beige: #E7DED9;
+$dark: #2D211C;
+$white: #FFFFFF;
+$gray: #666666;
+$light: #FFF8F7;
+$border: #E8E0DC;
+
+$success: #2E7D32;
+$error: #C62828;
+
+$radius: 18px;
+$shadow: 0 10px 30px rgba(0,0,0,.08);
+
+// ─────────────────────────────────────────────
+// Page
+// ─────────────────────────────────────────────
+.control-page {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  font-family: 'Segoe UI', sans-serif;
+  color: $dark;
+
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 28px;
+    font-weight: 800;
+    text-align: center;
+  }
+}
+
+// ─────────────────────────────────────────────
+// Box recherche
+// ─────────────────────────────────────────────
+.control-box {
+  background: $white;
+  border: 1px solid $border;
+  border-radius: $radius;
+  padding: 28px;
+  box-shadow: $shadow;
+  margin-bottom: 24px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  label {
+    font-size: .9rem;
+    font-weight: 700;
+    color: $dark;
+  }
+
+  input {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 12px;
+    border: 1.5px solid $border;
+    outline: none;
+    font-size: 1rem;
+    transition: .2s ease;
+    box-sizing: border-box;
+
+    &:focus {
+      border-color: $red;
+      box-shadow: 0 0 0 4px rgba(200,41,9,.08);
+    }
+  }
+
+  button {
+    background: $red;
+    color: $white;
+    border: none;
+    border-radius: 12px;
+    padding: 14px;
+    font-size: .95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: .2s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+      background: darken($red, 6%);
+    }
+  }
+}
+
+// ─────────────────────────────────────────────
+// Alertes
+// ─────────────────────────────────────────────
+.success,
+.error {
+  padding: 14px 18px;
+  border-radius: 12px;
+  margin-bottom: 18px;
+  font-weight: 600;
+}
+
+.success {
+  background: rgba(46,125,50,.1);
+  color: $success;
+  border: 1px solid rgba(46,125,50,.2);
+}
+
+.error {
+  background: rgba(198,40,40,.08);
+  color: $error;
+  border: 1px solid rgba(198,40,40,.15);
+}
+
+// ─────────────────────────────────────────────
+// Carte ticket
+// ─────────────────────────────────────────────
+.ticket-card {
+  position: relative;
+  overflow: hidden;
+
+  background: linear-gradient(
+    135deg,
+    #fff,
+    #fff8f7
+  );
+
+  border-radius: 24px;
+  border: 1px solid $border;
+  box-shadow: $shadow;
+
+  padding: 32px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 8px;
+    height: 100%;
+
+    background: $red;
+  }
+
+  h2 {
+    margin: 0 0 8px;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: $dark;
+  }
+
+  p {
+    margin: 0;
+    font-size: .95rem;
+    color: $gray;
+
+    strong {
+      color: $dark;
+      margin-right: 6px;
+    }
+  }
+
+  button {
+    margin-top: 16px;
+
+    background: $success;
+    color: white;
+
+    border: none;
+    border-radius: 12px;
+
+    padding: 14px 18px;
+
+    font-size: .95rem;
+    font-weight: 700;
+
+    cursor: pointer;
+    transition: .2s ease;
+
+    &:hover {
+      background: darken($success, 6%);
+      transform: translateY(-2px);
+    }
+  }
+}
+
+// ─────────────────────────────────────────────
+// Responsive
+// ─────────────────────────────────────────────
+@media (max-width: 768px) {
+  .control-page {
+    padding: 20px 14px;
+
+    h1 {
+      font-size: 1.6rem;
+    }
+  }
+
+  .control-box,
+  .ticket-card {
+    padding: 20px;
+  }
+}

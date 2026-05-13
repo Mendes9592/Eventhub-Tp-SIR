@@ -5,6 +5,7 @@ import { Ticket, Evenement } from "../models";
 import { ApiService } from "./api.service";
 import { AuthService } from "./auth.service";
 import jsPDF from "jspdf";
+import QRCode from "qrcode";
 @Injectable({ providedIn: "root" })
 export class TicketService {
   // Services nécessaires aux appels API et à l'utilisateur connecté
@@ -140,70 +141,89 @@ export class TicketService {
   }
 
   /**
-   * Génère et télécharge le ticket en PDF.
+   * Génère et télécharge un ticket PDF avec QR Code.
    */
   /**
-   * Génère et télécharge un ticket PDF.
+   * Génère un ticket PDF au design professionnel.
    */
-  downloadTicketPdf(ticket: Ticket) {
+  async downloadTicketPdf(ticket: Ticket) {
     const user = this.auth.user();
     const event = ticket.evenement;
+const qrContent = String(ticket.idTicket);
 
-    const doc = new jsPDF();
+    const qrImage = await QRCode.toDataURL(qrContent);
 
-    // Header
-    doc.setFontSize(22);
-    doc.text("EVENTHUB", 20, 20);
+    const doc = new jsPDF("landscape", "mm", "a5");
 
-    doc.setFontSize(16);
-    doc.text("Billet électronique", 20, 32);
+    doc.setFillColor(45, 33, 28);
+    doc.rect(0, 0, 210, 148, "F");
 
-    // Infos ticket
-    doc.setFontSize(12);
+    doc.setFillColor(255, 248, 247);
+    doc.roundedRect(10, 15, 190, 115, 6, 6, "F");
 
-    doc.text(`Référence : TKT-${ticket.idTicket}`, 20, 50);
+    doc.setFillColor(200, 41, 9);
+    doc.roundedRect(10, 15, 55, 115, 6, 6, "F");
 
-    doc.text(
-      `Place : ${ticket.numeroPlace ?? ticket.numeroTicket ?? "N/A"}`,
-      20,
-      60,
-    );
-
-    doc.text(`Statut : ${ticket.statut}`, 20, 70);
-
-    doc.text(`Prix : ${ticket.prixUnitaire ?? event?.prix ?? 0} €`, 20, 80);
-
-    // Infos événement
-    doc.setFontSize(14);
-    doc.text("Événement", 20, 100);
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(24);
+    doc.text("EventHub", 18, 35);
 
     doc.setFontSize(12);
+    doc.text("BILLET OFFICIEL", 18, 47);
 
-    doc.text(`Nom : ${event?.nom ?? ""}`, 20, 112);
-
-    doc.text(`Date : ${event?.date ?? ""}`, 20, 122);
-
-    doc.text(`Heure : ${event?.heure ?? ""}`, 20, 132);
-
-    doc.text(`Lieu : ${event?.lieu ?? ""}`, 20, 142);
-
-    // Infos utilisateur
-    doc.setFontSize(14);
-    doc.text("Participant", 20, 162);
-
-    doc.setFontSize(12);
-
-    doc.text(`${user?.prenom ?? ""} ${user?.nom ?? ""}`, 20, 174);
-
-    doc.text(`${user?.email ?? ""}`, 20, 184);
-
-    // Footer
     doc.setFontSize(10);
+    doc.text(`REF : TKT-${ticket.idTicket}`, 18, 62);
+    doc.text(`PLACE : ${ticket.numeroPlace ?? "N/A"}`, 18, 72);
+    doc.text(`STATUT : ${ticket.statut}`, 18, 82);
 
-    doc.text("Merci pour votre réservation sur EventHub.", 20, 260);
+    doc.setTextColor(45, 33, 28);
+    doc.setFontSize(22);
+    doc.text(event?.nom ?? "Événement", 75, 35);
 
-    doc.save(`ticket-${ticket.idTicket}.pdf`);
+    doc.setFontSize(12);
+    doc.text(`Date : ${event?.date ?? "Non renseignée"}`, 75, 52);
+    doc.text(`Heure : ${event?.heure ?? "Non renseignée"}`, 75, 62);
+    doc.text(`Lieu : ${event?.lieu ?? "Non renseigné"}`, 75, 72);
+    doc.text(`Prix : ${ticket.prixUnitaire ?? event?.prix ?? 0} €`, 75, 82);
+
+    doc.setFontSize(11);
+    doc.text(`Participant : ${user?.prenom ?? ""} ${user?.nom ?? ""}`, 75, 100);
+    doc.text(`Email : ${user?.email ?? ""}`, 75, 110);
+
+    doc.setDrawColor(231, 222, 217);
+    doc.setLineWidth(0.5);
+    doc.line(150, 25, 150, 120);
+
+    doc.addImage(qrImage, "PNG", 160, 40, 30, 30);
+
+    doc.setFontSize(9);
+    doc.text("Présentez ce QR code à l'entrée.", 155, 80);
+    doc.text("Ticket personnel et non transférable.", 155, 88);
+
+    doc.setFillColor(252, 198, 187);
+    doc.roundedRect(155, 100, 36, 12, 3, 3, "F");
+
+    doc.setTextColor(200, 41, 9);
+    doc.setFontSize(11);
+    doc.text("VALIDÉ", 165, 108);
+
+    doc.save(`ticket-TKT-${ticket.idTicket}.pdf`);
   }
+
+  /**
+   * Vérifie un ticket depuis son ID.
+   */
+  verifyTicket(idTicket: number): Observable<Ticket> {
+    return this.api.get<Ticket>(`tickets/verify/${idTicket}`);
+  }
+
+  /**
+   * Marque un ticket comme utilisé.
+   */
+  validateTicket(idTicket: number): Observable<Ticket> {
+    return this.api.put<Ticket>(`tickets/validate/${idTicket}`, {});
+  }
+
   /**
    * Données locales utilisées uniquement si besoin de test sans backend.
    */
